@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
-import Fuego from '../components/Fuego';
+import Fuego from './Fuego';
+import AnimatedProgressExamples from './AnimatedProgressExamples';
 // import Checkmark from './shared/Checkmark';
 // import SubmitButton from './buttons/SubmitButton'
 // import Donut from './Donut'
@@ -26,14 +27,14 @@ const animationList = [
         color: "rgba(159, 5, 17, 1)",
         bgColor: "rgba(219, 32, 28, 1)"
     },
-    //
-    // {
-    //     component: SubmitButton,
-    //     name: "SubmitButton",
-    //     bgColor: "#1ECD97",
-    //     color: "white"
-    // },
-    //
+
+    {
+        component: AnimatedProgressExamples,
+        name: "Circular Progress",
+        bgColor: "#1ECD97",
+        color: "white"
+    },
+
     // {
     //     component: Donut,
     //     name: "Donut",

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import Flame from './Flame';
+import Flame from '../components/Flame';
 
 import fuegoImage from '../assets/fuegologo.png';
 import {
