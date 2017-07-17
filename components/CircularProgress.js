@@ -28,7 +28,7 @@ export default class CircularProgress extends Component {
   };
 
   render() {
-    const { fill, baseWidth, barWidth, radius, size } = this.props;
+    const { fill, baseWidth, barWidth, radius, size, barColor, baseColor } = this.props;
     return (
         <Svg height={size} width={size} style={styles.svg}>
           <Svg.Circle
@@ -39,7 +39,7 @@ export default class CircularProgress extends Component {
             fill="transparent"
             strokeDasharray={[circum(radius)]}
             strokeDashoffset={0}
-            stroke="#666"
+            stroke={baseColor}
             strokeWidth={baseWidth}
           />
           <Svg.Circle
@@ -50,7 +50,7 @@ export default class CircularProgress extends Component {
             fill="transparent"
             strokeDasharray={[circum(radius)]}
             strokeDashoffset={this._fill(this.props.fill)}
-            stroke="#FF9F1E"
+            stroke={barColor}
             strokeWidth={barWidth}
           />
         </Svg>
