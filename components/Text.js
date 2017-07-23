@@ -10,7 +10,8 @@ const TextComponent = ({children, style}) => {
 
 const styles = StyleSheet.create({
     text: {
-        fontFamily: "Futura-Medium"
+        fontFamily: "Futura-Medium",
+        color: '#666'
     }
 });
 

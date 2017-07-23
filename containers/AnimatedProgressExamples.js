@@ -1,19 +1,28 @@
 import React, { PropTypes } from 'react';
-import { KeyboardAvoidingView, View, Animated, StyleSheet, Slider, TextInput, ScrollView } from 'react-native';
+import {
+  View,
+  Animated,
+  StyleSheet,
+  Slider,
+  TextInput,
+  ScrollView,
+  SegmentedControlIOS
+} from 'react-native';
 import { Constants } from 'expo';
 import CircularProgress from '../components/CircularProgress';
 import Text from '../components/Text';
+
 const AnimatedProgress = Animated.createAnimatedComponent(CircularProgress);
 
 export default class AnimatedCircularProgress extends React.Component {
 
   constructor(props) {
     super(props);
-    let initialProgress = 25;
     this.state = {
-      progressValue: initialProgress,
-      chartFillAnimation: new Animated.Value(initialProgress),
-      radius: 90,
+      progressValue: 1,
+      chartFillAnimation: new Animated.Value(25),
+      barRadius: 90,
+      baseRadius: 90,
       baseWidth: 10,
       barWidth: 8,
       barColor: "#FF9F1E",
@@ -25,17 +34,19 @@ export default class AnimatedCircularProgress extends React.Component {
     this._animateFill();
   }
 
-  _fillSliderOnComplete = (val) => {
-    this.setState({progressValue: val}, this._animateFill)
+  _animate = (e) => {
+    this.setState({progressValue: e.nativeEvent.selectedSegmentIndex}, this._animateFill)
 
   }
 
   _animateFill = () => {
     const { progressValue, chartFillAnimation } = this.state;
+    console.log("pro", progressValue)
+
     Animated.spring(
       chartFillAnimation,
       {
-        toValue: progressValue
+        toValue: progressValue * 25
       }
     ).start();
   }
@@ -46,51 +57,60 @@ export default class AnimatedCircularProgress extends React.Component {
       chartFillAnimation,
       ...other
      } = this.state;
+
     return (
-      <KeyboardAvoidingView style={styles.container}>
-        <ScrollView>
-          <AnimatedProgress
-            size={300}
-            fill={chartFillAnimation}
-            {...other}
-            />
-          <SliderComponent
-            key="fillSlider"
-            onSlidingComplete={v => { this.setState({progressValue: v}, this._animateFill) }}
-            label={'Fill'} value={progressValue}
-            />
+      <ScrollView contentContainerStyle={styles.container}>
+        <SegmentedControlIOS
+          style={styles.segmentControl}
+          key="fillSegment"
+          tintColor='#666'
+          values={['0', '25', '50', '75', '100']}
+          selectedIndex={progressValue}
+          onChange={this._animate}
+        />
 
-          <SliderComponent
-            key="radiusSlider"
-            onSlidingComplete={v => this.setState({radius: v})}
-            label={'Radius'} value={other.radius}
-            />
+        <SliderComponent
+          key="baseRadiusSlider"
+          onSlidingComplete={v => this.setState({baseRadius: v})}
+          label={'BaseRadius'} value={other.baseRadius}
+          />
 
-          <SliderComponent
-            key="baseWidth"
-            onSlidingComplete={v => this.setState({baseWidth: v})}
-            label={'Base width'} value={other.baseWidth}
-            />
+        <SliderComponent
+          key="baseWidth"
+          onSlidingComplete={v => this.setState({baseWidth: v})}
+          label={'Base width'} value={other.baseWidth}
+          />
 
-          <ColorPicker
-            key="baseColor"
-            colorSuccess={v => this.setState({baseColor: v})}
-            label={'Base color'} color={other.baseColor}
-            />
+        <ColorPicker
+          key="baseColor"
+          colorSuccess={v => this.setState({baseColor: v})}
+          label={'Base color'} color={other.baseColor}
+          />
 
-          <SliderComponent
-            key="barWidth"
-            onSlidingComplete={v => this.setState({barWidth: v})}
-            label={'Bar width'} value={other.barWidth}
-            />
+        <SliderComponent
+          key="barRadiusSlider"
+          onSlidingComplete={v => this.setState({barRadius: v})}
+          label={'BarRadius'} value={other.barRadius}
+          />
 
-          <ColorPicker
-            key="barColor"
-            colorSuccess={v => this.setState({barColor: v})}
-            label={'Bar color'} color={other.barColor}
-            />
-        </ScrollView>
-      </KeyboardAvoidingView>
+        <SliderComponent
+          key="barWidth"
+          onSlidingComplete={v => this.setState({barWidth: v})}
+          label={'Bar width'} value={other.barWidth}
+          />
+
+        <ColorPicker
+          key="barColor"
+          colorSuccess={v => this.setState({barColor: v})}
+          label={'Bar color'} color={other.barColor}
+          />
+
+        <AnimatedProgress
+          size={300}
+          fill={chartFillAnimation}
+          {...other}
+          />
+      </ScrollView>
     )
   }
 }
@@ -134,8 +154,6 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'flex-start',
-    marginTop: 65,
-    backgroundColor: '#ecf0f1',
   },
   colorChangeInput: {
     borderColor: '#666',
@@ -152,20 +170,17 @@ const styles = StyleSheet.create({
   slider: {
     marginLeft: 20,
     flex: 1
+  },
+  segmentControl: {
+    marginTop: 20,
+    // flex: 1
+    width: 300,
   }
 });
 
 AnimatedCircularProgress.propTypes = {
-  // style: View.propTypes.style,
-  // size: PropTypes.number,
-  fill: PropTypes.number.isRequired,
-  // prefill: PropTypes.number,
-  baseWidth: PropTypes.number,
-  barWidth: PropTypes.number,
-  // tintColor: PropTypes.oneOf([PropTypes.string, PropTypes.object]),
-  // backgroundColor: PropTypes.oneOf([PropTypes.string, PropTypes.object]),
-  // tension: PropTypes.number,
-  // friction: PropTypes.number
+  tension: PropTypes.number,
+  friction: PropTypes.number
 }
 
 AnimatedCircularProgress.defaultProps = {
